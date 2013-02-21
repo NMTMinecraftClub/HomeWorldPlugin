@@ -96,10 +96,10 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		economy.addCurrency(new Currency("redstone", Material.REDSTONE, 0, 15));
 		economy.addCurrency(new Currency("lapis", Material.INK_SACK, 4, 35));
 		//ADDED 2/21/13: @author Lucas Stuyvesant
-		economy.addCurrency(new Currency("iron block", Material.IRON_BLOCK, 0, 180));
-		economy.addCurrency(new Currency("gold block", Material.GOLD_BLOCK, 0, 1800));
-		economy.addCurrency(new Currency("diamond block", Material.DIAMOND_BLOCK, 0, 3600));
-		economy.addCurrency(new Currency("lapis block", Material.LAPIS_BLOCK, 0, 315));
+		economy.addCurrency(new Currency("iblock", Material.IRON_BLOCK, 0, 180));
+		economy.addCurrency(new Currency("gblock", Material.GOLD_BLOCK, 0, 1800));
+		economy.addCurrency(new Currency("dblock", Material.DIAMOND_BLOCK, 0, 3600));
+		economy.addCurrency(new Currency("lblock", Material.LAPIS_BLOCK, 0, 315));
 		getServer().getPluginManager().registerEvents(new EconomyListener(), this);
 		
 		//setup worldguard hook
