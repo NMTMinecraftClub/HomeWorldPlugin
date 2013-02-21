@@ -63,12 +63,28 @@ public class CommandHandler {
 				if (!(sender instanceof BlockCommandSender)){
 					return false;
 				}
-				HomeWorldPlugin.economy.deposit(Bukkit.getPlayer(args[0]), args[1],Integer.parseInt(args[2]));
-				return true;
+				//ADDED 2/21/13 @author Lucas Stuyvesant
+				if (args[2].equalsIgnoreCase("all")){
+					//TODO: add ability to deposit all
+					sender.sendMessage("'deposit [currency] all' is not yet implemented");
+					return true;
+				}
+				else{
+					HomeWorldPlugin.economy.deposit(Bukkit.getPlayer(args[0]), args[1],Integer.parseInt(args[2]));
+					return true;	
+				}
+				
 			}
 			if (args.length == 2){
-				HomeWorldPlugin.economy.deposit(sender, args[0],Integer.parseInt(args[1]));
-				return true;
+				if (args[1].equalsIgnoreCase("all")){
+					//TODO: add ability to deposit all
+					sender.sendMessage("'deposit [currency] all' is not yet implemented");
+					return true;
+				}
+				else{
+					HomeWorldPlugin.economy.deposit(sender, args[0],Integer.parseInt(args[1]));
+					return true;
+				}
 			}
 			else{
 				sender.sendMessage("Wrong number of arguments.");
