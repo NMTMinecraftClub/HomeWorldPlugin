@@ -5,6 +5,8 @@ import org.bukkit.Server;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class CommandHandler {
 	
@@ -64,9 +66,26 @@ public class CommandHandler {
 					return false;
 				}
 				//ADDED 2/21/13 @author Lucas Stuyvesant
+				//deposit [currency] all 
 				if (args[2].equalsIgnoreCase("all")){
-					//TODO: add ability to deposit all
-					sender.sendMessage("'deposit [currency] all' is not yet implemented");
+					//get the players inventory
+					Inventory playerInventory = ((Player) sender).getInventory();
+			
+					//check inventory
+					int i = 0;
+					for (ItemStack stack : playerInventory.getContents()){
+						if (stack != null){
+							if (isCurrency(stack, args[1])){
+								i += stack.getAmount();
+							}
+						}
+					}
+					
+					if(i == 0){
+						sender.sendMessage("Sorry, you do not have any " + args[1]);
+						return false;
+					}
+					HomeWorldPlugin.economy.deposit(Bukkit.getPlayer(args[0]), args[1], i);
 					return true;
 				}
 				else{
@@ -77,8 +96,23 @@ public class CommandHandler {
 			}
 			if (args.length == 2){
 				if (args[1].equalsIgnoreCase("all")){
-					//TODO: add ability to deposit all
-					sender.sendMessage("'deposit [currency] all' is not yet implemented");
+					//get the players inventory
+					Inventory playerInventory = ((Player) sender).getInventory();
+			
+					//check inventory
+					int i = 0;
+					for (ItemStack stack : playerInventory.getContents()){
+						if (stack != null){
+							if (isCurrency(stack, args[0])){
+								i += stack.getAmount();
+							}
+						}
+					}
+					if(i == 0){
+						sender.sendMessage("Sorry, you do not have any " + args[0]);
+						return false;
+					}
+					HomeWorldPlugin.economy.deposit(sender, args[0], i);
 					return true;
 				}
 				else{
