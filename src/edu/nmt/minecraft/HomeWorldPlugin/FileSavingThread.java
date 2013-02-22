@@ -7,11 +7,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.inventory.Inventory;
 
 import edu.nmt.minecraft.HomeWorldPlugin.economy.EconomyManager;
 import edu.nmt.minecraft.HomeWorldPlugin.economy.InventoryAccount;
@@ -22,11 +25,6 @@ import edu.nmt.minecraft.HomeWorldPlugin.economy.InventoryAccount;
  */
 class FileSavingThread extends Thread implements Listener{
 	
-	HashSet<Location> tourches;
-	public FileSavingThread(){
-		tourches = new HashSet<Location>();
-	}
-	
 	@Override
 	public void run(){
 		World wilderness = Bukkit.getWorld("Wilderness");
@@ -35,12 +33,12 @@ class FileSavingThread extends Thread implements Listener{
 			wilderness.setTicksPerMonsterSpawns(10);
 			//wilderness.setTime(15000);
 		}
-		
-		int j = 0;
+
 		while(true){
 			//save everything
 			HomeWorldPlugin.saveAll();
 			for (int i = 0; i < 10; i++){
+				wilderness = Bukkit.getWorld("Wilderness");
 				try {
 					Thread.sleep(1000 * 60);
 				} catch (InterruptedException e) {
@@ -56,33 +54,37 @@ class FileSavingThread extends Thread implements Listener{
 				}
 				
 			}
-			World w = Bukkit.getWorld("Wilderness");
-			j++;
-			if (j > 6){
-				if (w != null){
-					for (Location loc: tourches){
-					
-						w.getBlockAt(loc).setType(Material.AIR);
-					}
-					tourches.clear();
-					j = 0;
-				}
-				
-			}
-			
-			
+
 		}
 	}
 	
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-    public void removeTourches(BlockPlaceEvent event) {
+	public void wildernessDeath(PlayerDeathEvent event){
+		Player player = event.getEntity();
 		
-		if (event.getPlayer().getWorld().getName().equals("Wilderness")){
-			if (event.getBlock().getType().equals(Material.TORCH)){
-				tourches.add(event.getBlock().getLocation());
-			}
+		//check if the player is in the wilderness
+		if (player.getWorld().getName().equals("Wilderness")){
+			
+			//get the enderchest inventory
+			Inventory inv = player.getEnderChest();
+			
+			int wealth = HomeWorldPlugin.economy.calculateWealth(inv);
+			
+			int percent = (int) ((Math.random() * 15) + 40));
+			
+			int reduce = (int) (wealth * percent / 100);
+			
+			HomeWorldPlugin.economy.reduceInventory(inv, reduce);
+			
+			player.sendMessage("You died in the wilderness.");
+			player.sendMessage("Your enderchest had a total value of $" + wealth);
+			player.sendMessage(percent + "% will be removed. You lost $" + reduce);
+			
+			
+			
 		}
+		
+		
 	}
+	
 	
 }

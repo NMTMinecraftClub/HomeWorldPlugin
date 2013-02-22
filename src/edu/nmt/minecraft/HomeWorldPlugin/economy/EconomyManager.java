@@ -425,16 +425,7 @@ public class EconomyManager {
 	 * Calculates the sum of all physical currencies in the player's inventory
 	 * @param sender The player executing the command
 	 */
-	public void calculateWealth(CommandSender sender){
-		
-		//make sure its a player
-		if (!(sender instanceof Player)){
-			sender.sendMessage("Sorry, only players can execute this command");
-			return;
-		}
-		
-		//get the players inventory
-		Inventory playerInventory = ((Player) sender).getInventory();
+	public int calculateWealth(Inventory playerInventory){
 		
 		//calculate wealth
 		int wealth = 0;
@@ -448,8 +439,23 @@ public class EconomyManager {
 			}
 		}
 		
+		return wealth;
+	}
+	
+	
+	public void calculateWealth(CommandSender sender){
+		
+		//make sure its a player
+		if (!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		//get the players inventory
+		Inventory playerInventory = ((Player) sender).getInventory();
+		
 		//tell the player
-		sender.sendMessage("You are carrying $" + wealth + " worth in materials");
+		sender.sendMessage("You are carrying $" + calculateWealth(playerInventory) + " worth in materials");
 	}
 
 	/**
@@ -582,6 +588,11 @@ public class EconomyManager {
 				return;
 			}
 		}
+		
+	}
+
+	public void reduceInventory(Inventory inv, int reduce) {
+		// TODO Auto-generated method stub
 		
 	}
 	
