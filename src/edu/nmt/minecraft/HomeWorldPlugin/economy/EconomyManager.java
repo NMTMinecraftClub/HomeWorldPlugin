@@ -203,6 +203,99 @@ public class EconomyManager {
 		}
 		return false;
 	}
+	/**
+	 * Counts the number of a currency is in a given inventory
+	 * @param inv The inventory to be checked
+	 * @param currency The currency to be counted
+	 * @return The amount of currency in the inventory
+	 */
+	public int countInventory(Inventory inv, Currency currency){
+		
+		int i = 0;
+		for (ItemStack stack : inv.getContents()){
+			if (stack != null){
+				if (isCurrency(stack, currency)){
+					i += stack.getAmount();
+				}
+			}
+		}
+		
+		if(i == 0){
+			sender.sendMessage("Sorry, you do not have any " + currency);
+		}
+		
+		return i;
+	}
+	
+	/**
+	 * Counts the number of empty spaces in a given inventory for a currency
+	 * @param inv The inventory to be checked
+	 * @param currency for which space is being checked
+	 * @return Number of empty spaces in the inventory
+	 */
+	public int countEmptyInventory(Inventory inv, Currency currency){
+	
+		//check inventory for empty spots
+		int i = 0;
+		for (ItemStack stack : inv.getContents()){
+			if (stack != null){
+				if (isCurrency(stack, currency)){
+					i += (64 - stack.getAmount());
+				}
+			}
+			else{
+				i += 64;
+			}
+		}
+		
+		return i;
+	}
+	
+	/**
+	 * Adds a number of items to an inventory
+	 * @param inv The inventory to be added to
+	 * @param currency The currency to be added
+	 * @param amount The amount of currency to add
+	 */
+	 public void withdrawCurrency(Inventory inv, Currency currency, int amount){
+	 	
+	 	int j = 0;
+	 	for (ItemStack stack : inv.getContents()){
+			if (stack != null){
+				if (isCurrency(stack, currency)){
+					//finish off this stack
+					if (amount + stack.getAmount() <= 64){
+						inv.setItem(j, null);
+						inv.addItem(new ItemStack(stack.getType(), stack.getAmount() + amount, (short) 0, getCurrency(currency).getMaterialData()));
+						amount = 0;
+					}
+					//add the whole stack and keep going
+					else{
+						amount -= (64 - stack.getAmount());
+						inv.setItem(j, null);
+						inv.addItem(new ItemStack(stack.getType(), 64, (short) 0, getCurrency(currency).getMaterialData()));
+					}
+				}
+			}
+			else{
+				//finish off this stack
+				if (amount <= 64){
+					inv.addItem(new ItemStack(getCurrencyMaterial(currency), amount, (short) 0, getCurrency(currency).getMaterialData()));
+					amount = 0;
+				}
+				//add the whole stack and keep going
+				else{
+					amount -= 64;
+					inv.addItem(new ItemStack(getCurrencyMaterial(currency), 64, (short) 0, getCurrency(currency).getMaterialData()));
+				}
+			}
+			
+			if (amount == 0){
+				return;
+			}
+			j++;
+		}
+	 }
 	
 	/**
 	 * Allows a player to withdraw an amount of physical currency into his or her inventory, given he or she has the needed funds
@@ -236,74 +329,99 @@ public class EconomyManager {
 			return;
 		}
 		
-		//get the players inventory
 		Inventory playerInventory = ((Player) sender).getInventory();
 		
-		//check inventory for empty spots
-		int i = 0;
-		for (ItemStack stack : playerInventory.getContents()){
-			if (stack != null){
-				if (isCurrency(stack, currency)){
-					i += (64 - stack.getAmount());
-				}
-			}
-			else{
-				i += 64;
-			}
-		}
-		
-		//make sure enough was found
-		if (i < amount){
+		//checks for enough space to withdraw
+		if (countEmptyInventory(playerInventory, currency) < amount){
 			sender.sendMessage("Sorry, there is not enough space in your inventory.");
 			return;
 		}
 		
 		//add items
 		i = amount;
-		int j = 0;
-		for (ItemStack stack : playerInventory.getContents()){
-			if (stack != null){
-				if (isCurrency(stack, currency)){
-					//finish off this stack
-					if (i + stack.getAmount() <= 64){
-						playerInventory.setItem(j, null);
-						playerInventory.addItem(new ItemStack(stack.getType(), stack.getAmount() + i, (short) 0, getCurrency(currency).getMaterialData()));
-						i = 0;
-					}
-					//add the whole stack and keep going
-					else{
-						i -= (64 - stack.getAmount());
-						playerInventory.setItem(j, null);
-						playerInventory.addItem(new ItemStack(stack.getType(), 64, (short) 0, getCurrency(currency).getMaterialData()));
-					}
-				}
-			}
-			else{
-				//finish off this stack
-				if (i <= 64){
-					playerInventory.addItem(new ItemStack(getCurrencyMaterial(currency), i, (short) 0, getCurrency(currency).getMaterialData()));
-					i = 0;
-				}
-				//add the whole stack and keep going
-				else{
-					i -= 64;
-					playerInventory.addItem(new ItemStack(getCurrencyMaterial(currency), 64, (short) 0, getCurrency(currency).getMaterialData()));
-				}
-			}
-			
-			if (i == 0){
-				//remove funds
-				getAccount(sender.getName()).withdraw(amount * getCurrencyValue(currency));
-				sender.sendMessage(amount + " " + currency + " was withdrawn.");
-				return;
-			}
-			j++;
-		}
+		withdrawCurrency(playerInventory, currency, i);
+		
+		//remove funds
+		getAccount(sender.getName()).withdraw(amount * getCurrencyValue(currency));
+		sender.sendMessage(amount + " " + currency + " was withdrawn.");
+		return;
 		
 		//hopefully, this statement never runs
-		sender.sendMessage("something bad happened");
+		sender.sendMessage("something bad happened, but at least you are not running");
 	}
 
+	/**
+	 * Greedily withdraws a currency from a sender's account
+	 * @param sender The individual sending the command
+	 * @param currency The currency to be withdrawn
+	 */
+	public void greedyWithdraw(CommandSender sender, Currency currency){
+		int amount = java.lang.Math.floor(getAccount(sender.getName()).getBalance() / getCurrencyValue(currency));
+	
+		Inventory playerInventory = ((Player) sender).getInventory();
+		
+		//checks for max space for currency withdrawl
+		int i = amount;
+		if (countEmptyInventory(playerInventory, currency) < amount){
+			i = countEmptyInventory(playerInventory, currency);
+		}
+		
+		withdrawCurrency(playerInventory, currency, i);
+		
+		//remove funds
+		getAccount(sender.getName()).withdraw(i * getCurrencyValue(currency));
+		sender.sendMessage(i + " " + currency + " was withdrawn.");
+		return;
+	}
+	
+	/**
+	 * Withdraws as much currency greedily as possible from a sender's account
+	 * @param sender The individual withdrawing the currency
+	 */
+	public void withdrawAll(CommandSender sender){
+		
+		//make sure its a player
+		if (!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		//make sure the player is in the right world
+		if (!(Bukkit.getWorld("HomeWorld").getPlayers().contains(sender))){
+			sender.sendMessage("Sorry, you have to be on the HomeWorld to withdraw");
+			return;
+		}
+		
+		//make sure the player has currency to withdraw
+		if(getAccount(sender.getName()).getBalance() == 0){
+			sender.sendMessage("Sorry, you're broke");
+		}
+		
+		//greedy algorithm
+		String currency = "dblock";
+		greedyWithdraw(sender, currency);
+		currency = "gblock";
+		greedyWithdraw(sender, currency);
+		currency = "diamond";
+		greedyWithdraw(sender, currency);
+		currency = "lblock";
+		greedyWithdraw(sender, currency);
+		currency = "gold";
+		greedyWithdraw(sender, currency);
+		currency = "iblock";
+		greedyWithdraw(sender, currency);
+		currency = "lapis";
+		greedyWithdraw(sender, currency);
+		currency = "iron";
+		greedyWithdraw(sender, currency);
+		currency = "redstone";
+		greedyWithdraw(sender, currency);
+		currency = "coal";
+		greedyWithdraw(sender, currency);
+		
+		return;
+	}
+	
 	/**
 	 * Returns a Players Account
 	 * @param name Name of the player
@@ -341,6 +459,41 @@ public class EconomyManager {
 	}
 
 	/**
+ 	* Removes an amount of currency from a given inventory
+ 	* @param inv The inventory from which the currency is removed
+ 	* @param currency The currency to be removed
+ 	* @amount The ammount of currency to be removed
+ 	*/
+	public void depositCurrency(Inventory inv, Currency currency, int amount){
+	
+		i = amount;
+		int j = 0;
+		for (ItemStack stack : inv.getContents()){
+			if (stack != null){
+				if (isCurrency(stack, currency)){
+					//finish off this stack
+					if (i < stack.getAmount()){
+						
+						stack.setAmount(stack.getAmount() - i);
+						i = 0;
+						inv.setItem(j, new ItemStack(stack.getType(), stack.getAmount(), (short) 0, getCurrency(currency).getMaterialData()));
+						
+					}
+					//remove the whole stack and keep going
+					else{
+						i -= stack.getAmount();
+						inv.setItem(j, null);
+					}
+					
+					if (i == 0){
+						return;
+					}
+				}
+			}
+			j++;
+		}
+	}
+	/**
 	 * Allows a player to deposit an amount of physical currency into his or her account, given he or she has the currency
 	 * @param sender The player executing the command
 	 * @param currency The name of the physical currency specified
@@ -370,14 +523,7 @@ public class EconomyManager {
 		Inventory playerInventory = ((Player) sender).getInventory();
 		
 		//check inventory
-		int i = 0;
-		for (ItemStack stack : playerInventory.getContents()){
-			if (stack != null){
-				if (isCurrency(stack, currency)){
-					i += stack.getAmount();
-				}
-			}
-		}
+		int i = countInventory(playerInventory, currency);
 		
 		//make sure enough was found
 		if (i < amount){
@@ -386,41 +532,54 @@ public class EconomyManager {
 		}
 		
 		//remove items
-		i = amount;
-		int j = 0;
-		for (ItemStack stack : playerInventory.getContents()){
-			if (stack != null){
-				if (isCurrency(stack, currency)){
-					//finish off this stack
-					if (i < stack.getAmount()){
+		depositCurrency(playerInventory, currency, amount);
 						
-						stack.setAmount(stack.getAmount() - i);
-						i = 0;
-						playerInventory.setItem(j, new ItemStack(stack.getType(), stack.getAmount(), (short) 0, getCurrency(currency).getMaterialData()));
-						
-					}
-					//remove the whole stack and keep going
-					else{
-						i -= stack.getAmount();
-						playerInventory.setItem(j, null);
-					}
-					
-					if (i == 0){
-						//add funds
-						getAccount(sender.getName()).deposit(amount * getCurrencyValue(currency));
-						sender.sendMessage(amount + " " + currency + " was deposited.");
-						return;
-					}
-				}
-			}
-			j++;
-		}
-		
+		//add funds
+		getAccount(sender.getName()).deposit(amount * getCurrencyValue(currency));
+		sender.sendMessage(amount + " " + currency + " was deposited.");
+		return;
+
 		//hopefully, this statement never executes
-		sender.sendMessage("something bad happened");
+		sender.sendMessage("something bad happened, we're screwed");
 		
 	}
 	
+	/**
+	 * Deposits all instances of a currency in the sender's inventory
+	 * @param sender The individual sending the command
+	 * @param currency The currency to be deposited
+	 */
+	public void depositAll(CommandSender sender, String currency){
+		
+		//make sure its a player
+		if (!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		//make sure the player is in the right world
+		if (!(Bukkit.getWorld("HomeWorld").getPlayers().contains(sender))){
+			sender.sendMessage("Sorry, you have to be on the HomeWorld to deposit items");
+			return;
+		}
+		
+		//get the players inventory
+		Inventory playerInventory = ((Player) sender).getInventory();
+		
+		//check inventory
+		int amount = countInventory(playerInventory, currency);
+		
+		depositCurrency(playerInventory, currency, amount);
+						
+		//add funds
+		getAccount(sender.getName()).deposit(amount * getCurrencyValue(currency));
+		sender.sendMessage(amount + " " + currency + " was deposited.");
+		return;
+
+		//hopefully, this statement never executes
+		sender.sendMessage("something bad happened, we're screwed");
+	}
+
 	/**
 	 * Calculates the sum of all physical currencies in the player's inventory
 	 * @param sender The player executing the command
