@@ -214,14 +214,10 @@ public class EconomyManager {
 		int i = 0;
 		for (ItemStack stack : inv.getContents()){
 			if (stack != null){
-				if (isCurrency(stack, currency)){
+				if (isCurrency(stack, currency.getName())){
 					i += stack.getAmount();
 				}
 			}
-		}
-		
-		if(i == 0){
-			sender.sendMessage("Sorry, you do not have any " + currency);
 		}
 		
 		return i;
@@ -239,7 +235,7 @@ public class EconomyManager {
 		int i = 0;
 		for (ItemStack stack : inv.getContents()){
 			if (stack != null){
-				if (isCurrency(stack, currency)){
+				if (isCurrency(stack, currency.getName())){
 					i += (64 - stack.getAmount());
 				}
 			}
@@ -262,31 +258,31 @@ public class EconomyManager {
 	 	int j = 0;
 	 	for (ItemStack stack : inv.getContents()){
 			if (stack != null){
-				if (isCurrency(stack, currency)){
+				if (isCurrency(stack, currency.getName())){
 					//finish off this stack
 					if (amount + stack.getAmount() <= 64){
 						inv.setItem(j, null);
-						inv.addItem(new ItemStack(stack.getType(), stack.getAmount() + amount, (short) 0, getCurrency(currency).getMaterialData()));
+						inv.addItem(new ItemStack(stack.getType(), stack.getAmount() + amount, (short) 0, currency.getMaterialData()));
 						amount = 0;
 					}
 					//add the whole stack and keep going
 					else{
 						amount -= (64 - stack.getAmount());
 						inv.setItem(j, null);
-						inv.addItem(new ItemStack(stack.getType(), 64, (short) 0, getCurrency(currency).getMaterialData()));
+						inv.addItem(new ItemStack(stack.getType(), 64, (short) 0, currency.getMaterialData()));
 					}
 				}
 			}
 			else{
 				//finish off this stack
 				if (amount <= 64){
-					inv.addItem(new ItemStack(getCurrencyMaterial(currency), amount, (short) 0, getCurrency(currency).getMaterialData()));
+					inv.addItem(new ItemStack(getCurrencyMaterial(currency.getName()), amount, (short) 0, currency.getMaterialData()));
 					amount = 0;
 				}
 				//add the whole stack and keep going
 				else{
 					amount -= 64;
-					inv.addItem(new ItemStack(getCurrencyMaterial(currency), 64, (short) 0, getCurrency(currency).getMaterialData()));
+					inv.addItem(new ItemStack(getCurrencyMaterial(currency.getName()), 64, (short) 0, currency.getMaterialData()));
 				}
 			}
 			
@@ -332,14 +328,14 @@ public class EconomyManager {
 		Inventory playerInventory = ((Player) sender).getInventory();
 		
 		//checks for enough space to withdraw
-		if (countEmptyInventory(playerInventory, currency) < amount){
+		if (countEmptyInventory(playerInventory, this.getCurrency(currency)) < amount){
 			sender.sendMessage("Sorry, there is not enough space in your inventory.");
 			return;
 		}
 		
 		//add items
-		i = amount;
-		withdrawCurrency(playerInventory, currency, i);
+		int i = amount;
+		withdrawCurrency(playerInventory,  this.getCurrency(currency), i);
 		
 		//remove funds
 		getAccount(sender.getName()).withdraw(amount * getCurrencyValue(currency));
@@ -347,7 +343,7 @@ public class EconomyManager {
 		return;
 		
 		//hopefully, this statement never runs
-		sender.sendMessage("something bad happened, but at least you are not running");
+		//sender.sendMessage("something bad happened, but at least you are not running");
 	}
 
 	/**
@@ -356,7 +352,7 @@ public class EconomyManager {
 	 * @param currency The currency to be withdrawn
 	 */
 	public void greedyWithdraw(CommandSender sender, Currency currency){
-		int amount = java.lang.Math.floor(getAccount(sender.getName()).getBalance() / getCurrencyValue(currency));
+		int amount = (int) java.lang.Math.floor(getAccount(sender.getName()).getBalance() / getCurrencyValue(currency.getName()));
 	
 		Inventory playerInventory = ((Player) sender).getInventory();
 		
@@ -369,7 +365,7 @@ public class EconomyManager {
 		withdrawCurrency(playerInventory, currency, i);
 		
 		//remove funds
-		getAccount(sender.getName()).withdraw(i * getCurrencyValue(currency));
+		getAccount(sender.getName()).withdraw(i * getCurrencyValue(currency.getName()));
 		sender.sendMessage(i + " " + currency + " was withdrawn.");
 		return;
 	}
@@ -399,25 +395,25 @@ public class EconomyManager {
 		
 		//greedy algorithm
 		String currency = "dblock";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "gblock";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "diamond";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "lblock";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "gold";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "iblock";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "lapis";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "iron";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "redstone";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		currency = "coal";
-		greedyWithdraw(sender, currency);
+		greedyWithdraw(sender, this.getCurrency(currency));
 		
 		return;
 	}
@@ -466,17 +462,17 @@ public class EconomyManager {
  	*/
 	public void depositCurrency(Inventory inv, Currency currency, int amount){
 	
-		i = amount;
+		int i = amount;
 		int j = 0;
 		for (ItemStack stack : inv.getContents()){
 			if (stack != null){
-				if (isCurrency(stack, currency)){
+				if (isCurrency(stack, currency.getName())){
 					//finish off this stack
 					if (i < stack.getAmount()){
 						
 						stack.setAmount(stack.getAmount() - i);
 						i = 0;
-						inv.setItem(j, new ItemStack(stack.getType(), stack.getAmount(), (short) 0, getCurrency(currency).getMaterialData()));
+						inv.setItem(j, new ItemStack(stack.getType(), stack.getAmount(), (short) 0, currency.getMaterialData()));
 						
 					}
 					//remove the whole stack and keep going
@@ -502,56 +498,14 @@ public class EconomyManager {
 	 *  @return void
 	 */
 	 public void depositEverything(CommandSender sender){
-	 	ArrayList<String> currency = new ArrayList<String>();
-	 	
-	 	// Assigns items into arraylist - to add more types of currency add below
-	 	currency.add("dblock");
-	 	currency.add("gblock");
-	 	currency.add("diamond");
-	 	currency.add("lblock");
-	 	currency.add("gold");
-	 	currency.add("iblock");
-	 	currency.add("lapis");
-	 	currency.add("iron");
-	 	currency.add("redstone");
-	 	currency.add("coal");
 	 	
 	 	// Iterates through arraylist depositing items
-	 	for(int i = 0; i < currency.size(); i++){
-	 		depositAll(sender, currency.get(i));	 	
+	 	for(Currency currency: this.getCurrencies()){
+	 		depositAll(sender, currency.getName());	 	
 	 	}
 	 
 	 	return; 
 	 }
-	
-	/**
-	 * Allows a player to deposit all currency in his/her inventory to his/her account
-	 * @param sender The player executing the command
-	 */
-	public void depositEverything(CommandSender sender){
-		String currency = "dblock";
-		depositAll(sender, currency);
-		currency = "gblock";
-		depositAll(sender, currency);
-		currency = "diamond";
-		depositAll(sender, currency);
-		currency = "lblock";
-		depositAll(sender, currency);
-		currency = "gold";
-		depositAll(sender, currency);
-		currency = "iblock";
-		depositAll(sender, currency);
-		currency = "lapis";
-		depositAll(sender, currency);
-		currency = "iron";
-		depositAll(sender, currency);
-		currency = "redstone";
-		depositAll(sender, currency);
-		currency = "coal";
-		depositAll(sender, currency);
-		
-		return;
-	}
 	
 	/**
 	 * Allows a player to deposit an amount of physical currency into his or her account, given he or she has the currency
@@ -583,7 +537,7 @@ public class EconomyManager {
 		Inventory playerInventory = ((Player) sender).getInventory();
 		
 		//check inventory
-		int i = countInventory(playerInventory, currency);
+		int i = countInventory(playerInventory, this.getCurrency(currency));
 		
 		//make sure enough was found
 		if (i < amount){
@@ -592,7 +546,7 @@ public class EconomyManager {
 		}
 		
 		//remove items
-		depositCurrency(playerInventory, currency, amount);
+		depositCurrency(playerInventory, this.getCurrency(currency), amount);
 						
 		//add funds
 		getAccount(sender.getName()).deposit(amount * getCurrencyValue(currency));
@@ -600,7 +554,7 @@ public class EconomyManager {
 		return;
 
 		//hopefully, this statement never executes
-		sender.sendMessage("something bad happened, we're screwed");
+		//sender.sendMessage("something bad happened, we're screwed");
 		
 	}
 	
@@ -627,15 +581,14 @@ public class EconomyManager {
 		Inventory playerInventory = ((Player) sender).getInventory();
 		
 		//check inventory
-		int amount = countInventory(playerInventory, currency);
+		int amount = countInventory(playerInventory, this.getCurrency(currency));
 		
-		depositCurrency(playerInventory, currency, amount);
+		depositCurrency(playerInventory, this.getCurrency(currency), amount);
 						
 		//add funds
 		getAccount(sender.getName()).deposit(amount * getCurrencyValue(currency));
 		sender.sendMessage(amount + " " + currency + " was deposited.");
-		return;
-
+		
 		//hopefully, this statement never executes
 		sender.sendMessage("something bad happened, we're screwed");
 	}

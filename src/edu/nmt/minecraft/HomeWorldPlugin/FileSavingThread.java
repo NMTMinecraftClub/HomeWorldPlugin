@@ -59,30 +59,30 @@ class FileSavingThread extends Thread implements Listener{
 	}
 	
 	public void wildernessDeath(PlayerDeathEvent event){
-		Player player = event.getEntity();
-		
-		//check if the player is in the wilderness
-		if (player.getWorld().getName().equals("Wilderness")){
-			
-			//get the enderchest inventory
-			Inventory inv = player.getEnderChest();
-			
-			int wealth = HomeWorldPlugin.economy.calculateWealth(inv);
-			
-			int percent = (int) ((Math.random() * 15) + 40));
-			
-			int reduce = (int) (wealth * percent / 100);
-			
-			HomeWorldPlugin.economy.reduceInventory(inv, reduce);
-			
-			player.sendMessage("You died in the wilderness.");
-			player.sendMessage("Your enderchest had a total value of $" + wealth);
-			player.sendMessage(percent + "% will be removed. You lost $" + reduce);
-			
-			
-			
-		}
-		
+//		Player player = event.getEntity();
+//		
+//		//check if the player is in the wilderness
+//		if (player.getWorld().getName().equals("Wilderness")){
+//			
+//			//get the enderchest inventory
+//			Inventory inv = player.getEnderChest();
+//			
+//			int wealth = HomeWorldPlugin.economy.calculateWealth(inv);
+//			
+//			int percent = (int) ((Math.random() * 15) + 40));
+//			
+//			int reduce = (int) (wealth * percent / 100);
+//			
+//			HomeWorldPlugin.economy.reduceInventory(inv, reduce);
+//			
+//			player.sendMessage("You died in the wilderness.");
+//			player.sendMessage("Your enderchest had a total value of $" + wealth);
+//			player.sendMessage(percent + "% will be removed. You lost $" + reduce);
+//			
+//			
+//			
+//		}
+//		
 		
 	}
 	

@@ -102,7 +102,7 @@ public class CommandHandler {
 					return false;
 				}
 				if(args[2].equalsIgnoreCase("all")){
-					HomeWorldPlugin.economy.greedyWithdraw(Bukkit.getPlayer(args[0]), args[1]);
+					HomeWorldPlugin.economy.greedyWithdraw(Bukkit.getPlayer(args[0]), HomeWorldPlugin.economy.getCurrency(args[1]));
 					return true;
 				}
 				else{
@@ -112,7 +112,7 @@ public class CommandHandler {
 			}
 			if (args.length == 2){
 				if(args[1].equalsIgnoreCase("all")){
-					HomeWorldPlugin.economy.greedyWithdraw(sender, args[0]);
+					HomeWorldPlugin.economy.greedyWithdraw(sender, HomeWorldPlugin.economy.getCurrency(args[0]));
 					return true;
 				}
 				else{
