@@ -494,6 +494,36 @@ public class EconomyManager {
 		}
 	}
 	
+	/** 
+	 *  @Author Timmy Miles
+	 *  Allows a player to deposit all currency in his/her inventory to his/her account
+	 *  Derivation of Lucas's addition using an arraylist
+	 *  @param sender The player executing the command
+	 *  @return void
+	 */
+	 public void depositEverything(CommandSender sender){
+	 	ArrayList<String> currency = new ArrayList<String>();
+	 	
+	 	// Assigns items into arraylist - to add more types of currency add below
+	 	currency.add("dblock");
+	 	currency.add("gblock");
+	 	currency.add("diamond");
+	 	currency.add("lblock");
+	 	currency.add("gold");
+	 	currency.add("iblock");
+	 	currency.add("lapis");
+	 	currency.add("iron");
+	 	currency.add("redstone");
+	 	currency.add("coal");
+	 	
+	 	// Iterates through arraylist depositing items
+	 	for(int i = 0; i < currency.size(); i++){
+	 		depositAll(sender, currency.get(i));	 	
+	 	}
+	 
+	 	return; 
+	 }
+	
 	/**
 	 * Allows a player to deposit all currency in his/her inventory to his/her account
 	 * @param sender The player executing the command
