@@ -493,6 +493,36 @@ public class EconomyManager {
 			j++;
 		}
 	}
+	
+	/**
+	 * Allows a player to deposit all currency in his/her inventory to his/her account
+	 * @param sender The player executing the command
+	 */
+	public void depositEverything(CommandSender sender){
+		String currency = "dblock";
+		depositAll(sender, currency);
+		currency = "gblock";
+		depositAll(sender, currency);
+		currency = "diamond";
+		depositAll(sender, currency);
+		currency = "lblock";
+		depositAll(sender, currency);
+		currency = "gold";
+		depositAll(sender, currency);
+		currency = "iblock";
+		depositAll(sender, currency);
+		currency = "lapis";
+		depositAll(sender, currency);
+		currency = "iron";
+		depositAll(sender, currency);
+		currency = "redstone";
+		depositAll(sender, currency);
+		currency = "coal";
+		depositAll(sender, currency);
+		
+		return;
+	}
+	
 	/**
 	 * Allows a player to deposit an amount of physical currency into his or her account, given he or she has the currency
 	 * @param sender The player executing the command
