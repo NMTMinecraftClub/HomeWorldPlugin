@@ -94,7 +94,7 @@ public class CommandHandler {
 		}
 		
 		/**
-		 * player wants to withdraw
+		 * player wants to withdraw currency
 		 */
 		if(cmd.getName().equalsIgnoreCase("withdraw")){
 			if (args.length == 3){
