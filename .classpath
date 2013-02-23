@@ -2,16 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/LWC.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/Multiverse-Core-2.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/PermissionsBukkit-2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/TerrainControl.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/TradeMod.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/worldedit-5.5.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/Multiverse-Inventories-2.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/Multiverse-Portals-2.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Desktop/199.229.251.184_25565/plugins/worldguard-5.7.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matthew/Documents/eclipse/libraries/bukkit/bukkit-1.4.7-R1.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/bukkit-1.4.7-R0.1.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/LWC.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/Multiverse-Core-2.4.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/Multiverse-Inventories-2.5.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/PermissionsBukkit-2.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/TerrainControl.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/Vault.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/WorldEdit.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Lucas Stuyvesant/workspace/Libraries/WorldGuard.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
