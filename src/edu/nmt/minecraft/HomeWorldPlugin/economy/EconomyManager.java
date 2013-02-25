@@ -394,26 +394,10 @@ public class EconomyManager {
 		}
 		
 		//greedy algorithm
-		String currency = "dblock";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "gblock";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "diamond";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "lblock";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "gold";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "iblock";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "lapis";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "iron";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "redstone";
-		greedyWithdraw(sender, this.getCurrency(currency));
-		currency = "coal";
-		greedyWithdraw(sender, this.getCurrency(currency));
+		//Iterates through arraylist withdrawing items
+		for(Currency currency: this.getCurrencies()){
+			greedyWithdrawl(sender, this.getCurrency(currency));
+		}
 		
 		return;
 	}
