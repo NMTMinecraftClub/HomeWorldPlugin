@@ -393,10 +393,9 @@ public class EconomyManager {
 			sender.sendMessage("Sorry, you're broke");
 		}
 		
-		//greedy algorithm
-		//Iterates through arraylist withdrawing items
+		//greedy algorithm iteration through arraylist withdrawing items
 		for(Currency currency: this.getCurrencies()){
-			greedyWithdrawl(sender, this.getCurrency(currency));
+			greedyWithdraw(sender, currency);
 		}
 		
 		return;
