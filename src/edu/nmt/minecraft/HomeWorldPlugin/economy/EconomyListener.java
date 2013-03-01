@@ -48,4 +48,29 @@ public class EconomyListener implements Listener{
 			System.out.println("[HomeWorldPlugin-Economy] made new account for " + event.getPlayer().getName());
 		}
 	}
+	
+	/*
+	 * Removes a percentage (40-70) of currency from a player's enderchest upon death in the wilderness
+	 * @param event PlayerDeathEvent
+	 */
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void wildernessDeath(PlayerDeathEvent event) {
+		Player player = event.getEntity();
+		if(player.getLocation().getWorld().getName().equals("Wilderness")) {
+			Random random = new Random();
+			int percentLost = random.nextInt(40) + 30;
+			int inventoryAmount = 0;
+			int valueLost = 0;
+
+			// Iterates through arraylist depositing items
+		 	for(Currency currency: economy.getCurrencies()){
+		 		inventoryAmount = economy.countInventory(player.getEnderChest(), currency);
+				economy.depositCurrency(player.getEnderChest(), currency, (int)Math.ceil(inventoryAmount * percentLost / 100.));
+				valueLost += economy.getCurrencyValue(currency.getName()) * (int)Math.ceil(inventoryAmount * percentLost / 100.);
+		 	}
+
+			player.sendMessage("You died in the wilderness");
+			player.sendMessage("$" + valueLost + " was lost from your EnderChest (" + percentLost + "% of currencies)");
+		}
+	}
 }
