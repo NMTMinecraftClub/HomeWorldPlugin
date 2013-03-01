@@ -90,16 +90,21 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		economy = new EconomyManager();
 		//TODO: turn these into a configuration file
 		economy.addCurrency(new Currency("coal", Material.COAL, 0, 10));
-		economy.addCurrency(new Currency("iron", Material.IRON_INGOT, 0, 20));
-		economy.addCurrency(new Currency("gold",  Material.GOLD_INGOT, 0, 200));
-		economy.addCurrency(new Currency("diamond", Material.DIAMOND, 0, 400));
 		economy.addCurrency(new Currency("redstone", Material.REDSTONE, 0, 15));
+		economy.addCurrency(new Currency("coal_ore", Material.COAL_ORE, 0, 22));
+		economy.addCurrency(new Currency("iron_ore", Material.IRON_ORE, 0, 20));
+		economy.addCurrency(new Currency("iron", Material.IRON_INGOT, 0, 20));
+		economy.addCurrency(new Currency("redstone_ore", Material.REDSTONE_ORE, 0, 33));
 		economy.addCurrency(new Currency("lapis", Material.INK_SACK, 4, 35));
-		//ADDED 2/21/13: @author Lucas Stuyvesant
+		economy.addCurrency(new Currency("lapis_ore", Material.LAPIS_ORE, 0, 77));
 		economy.addCurrency(new Currency("iblock", Material.IRON_BLOCK, 0, 180));
+		economy.addCurrency(new Currency("gold_ore", Material.GOLD_ORE, 0, 200));
+		economy.addCurrency(new Currency("gold",  Material.GOLD_INGOT, 0, 200));
+		economy.addCurrency(new Currency("lblock", Material.LAPIS_BLOCK, 0, 315));
+		economy.addCurrency(new Currency("diamond", Material.DIAMOND, 0, 400));
+		economy.addCurrency(new Currency("diamond_ore", Material.DIAMOND_ORE, 0, 880));
 		economy.addCurrency(new Currency("gblock", Material.GOLD_BLOCK, 0, 1800));
 		economy.addCurrency(new Currency("dblock", Material.DIAMOND_BLOCK, 0, 3600));
-		economy.addCurrency(new Currency("lblock", Material.LAPIS_BLOCK, 0, 315));
 		getServer().getPluginManager().registerEvents(new EconomyListener(), this);
 		
 		//setup worldguard hook
