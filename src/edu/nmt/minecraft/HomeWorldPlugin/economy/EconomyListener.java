@@ -62,7 +62,7 @@ public class EconomyListener implements Listener{
 		Player player = event.getEntity();
 		if(player.getLocation().getWorld().getName().equals("Wilderness")) {
 			Random random = new Random();
-			int percentLost = random.nextInt(40) + 30;
+			int percentLost = random.nextInt(30) + 40;
 			int inventoryAmount = 0;
 			int valueLost = 0;
 
