@@ -57,6 +57,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	//public static Whitelist whitelist;
 	public static FileSavingThread savingThread = null;
 	public static LoginHandler loginHandler = null;
+	public static MobSpawnListener mobSpawnListener = null;
 	
 	
 	/**
@@ -134,6 +135,9 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		//set up login handler
 		loginHandler = new LoginHandler();
 		getServer().getPluginManager().registerEvents(loginHandler, this);
+		
+		mobSpawnListener = new MobSpawnListener();
+		getServer().getPluginManager().registerEvents(mobSpawnListener, this);
 		
 		getLogger().info("[HomeWorldPlugin] HomeWorldPlugin has been enabled.");
 	}
