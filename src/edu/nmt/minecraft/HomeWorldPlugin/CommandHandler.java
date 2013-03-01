@@ -87,6 +87,16 @@ public class CommandHandler {
 					return true;
 				}
 			}
+			if (args.length == 1){
+				if(args[0].equalsIgnoreCase("all")){
+					HomeWorldPlugin.economy.depositEverything(sender);
+					return true;
+				}
+				else{
+					sender.sendMessage("Wrong number of arguments");
+					return false;
+				}
+			}
 			else{
 				sender.sendMessage("Wrong number of arguments.");
 				return false;
