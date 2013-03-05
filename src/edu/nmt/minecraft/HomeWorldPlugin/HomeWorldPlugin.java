@@ -136,8 +136,14 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		loginHandler = new LoginHandler();
 		getServer().getPluginManager().registerEvents(loginHandler, this);
 		
-		mobSpawnListener = new MobSpawnListener();
-		getServer().getPluginManager().registerEvents(mobSpawnListener, this);
+		try{
+			mobSpawnListener = new MobSpawnListener();
+			getServer().getPluginManager().registerEvents(mobSpawnListener, this);
+		}catch(Exception e){
+			System.out.println(e.getMessage().equals("Something with a wither"));
+			
+		}
+		
 		
 		getLogger().info("[HomeWorldPlugin] HomeWorldPlugin has been enabled.");
 	}

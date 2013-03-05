@@ -21,16 +21,10 @@ public class MobSpawnListener implements Listener{
 		
 		System.out.println("");
 		//checks if a wither is spawned in HomeWorld
-		if(CreatureSpawnEvent.SpawnReason.BUILD_WITHER.equals(true)){
-			System.out.println("tryed to spawn wither");
+		if(event.getEntity().getEntityId() == 64 && ! event.getLocation().getWorld().getName().matches("Wilderness")){
+			System.out.println("tryed to spawn wither in world that isn't the wilderness");
+			event.setCancelled(true);
 			
-			if(! event.getLocation().getWorld().getName().equals("Wilderness")){
-				System.out.println("Not in the Wilderness");
-				event.getEntity().getType().isSpawnable();
-				CreatureSpawnEvent.SpawnReason.BUILD_WITHER.equals(false);
-			}
 		}
-		
-	}
-	
+	}	
 }
