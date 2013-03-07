@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -40,7 +42,7 @@ class BalanceComparator implements Comparator<Account>{
  * Handles all economy related commands, etc
  * @author Matthew
  */
-public class EconomyManager {
+public class EconomyManager implements net.milkbowl.vault.economy.Economy {
 	
 	/**
 	 * List of all currently loaded currencies
@@ -637,31 +639,7 @@ public class EconomyManager {
 		return getAccount(name).getBalance();
 	}
 
-	/**
-	 * Removes a given amount of money from a player's account
-	 * @param name Name of the player
-	 * @param amount amount to be removed
-	 */
-	public void withdraw(String name, double amount) {
-		if (!(hasAccount(name))){
-			return;
-		}
-		Account account = getAccount(name);
-		account.withdraw(amount);
-	}
-	
-	/**
-	 * Adds a given amount of money to a player's account
-	 * @param name Name of the player
-	 * @param amount amount to be added
-	 */
-	public void deposit(String name, double amount) {
-		if (!(hasAccount(name))){
-			return;
-		}
-		Account account = getAccount(name);
-		account.deposit(amount);
-	}
+
 
 	/**
 	 * Sets a players balance. Can only be executed by the server
@@ -746,9 +724,161 @@ public class EconomyManager {
 		
 	}
 
+	
+	
+	
 	public void reduceInventory(Inventory inv, int reduce) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/*
+	 * Here starts the code for the interface to vault.
+	 * These methods are what make the EconomyManager an actual Economy
+	 * These methods need to be filled
+	 */
+
+	@Override
+	public EconomyResponse bankBalance(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse bankDeposit(String arg0, double arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse bankHas(String arg0, double arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse bankWithdraw(String arg0, double arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse createBank(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean createPlayerAccount(String arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String currencyNamePlural() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String currencyNameSingular() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse deleteBank(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse depositPlayer(String arg0, double arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String format(double arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int fractionalDigits() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<String> getBanks() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean has(String arg0, double arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasBankSupport() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EconomyResponse isBankMember(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyResponse isBankOwner(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
+	/**
+	 * Removes a given amount of money from a player's account
+	 * @param name Name of the player
+	 * @param amount amount to be removed
+	 */
+	@Override
+	public EconomyResponse withdrawPlayer(String name, double amount) {		
+		if (!(hasAccount(name))){
+			return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.FAILURE, "No such account exists");
+		}
+		Account account = getAccount(name);
+		account.withdraw(amount);
+		return new EconomyResponse(amount, account.getBalance(), EconomyResponse.ResponseType.SUCCESS, "Successfully took "+ amount +" from " + name);
+	}
+	
+	/**
+	 * Adds a given amount of money to a player's account
+	 * @param name Name of the player
+	 * @param amount amount to be added
+	 */
+	public void deposit(String name, double amount) {
+		if (!(hasAccount(name))){
+			return;
+		}
+		Account account = getAccount(name);
+		account.deposit(amount);
 	}
 	
 }

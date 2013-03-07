@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicePriority;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -141,7 +142,15 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 			getServer().getPluginManager().registerEvents(mobSpawnListener, this);
 		}catch(Exception e){
 			System.out.println(e.getMessage().equals("Something with a wither"));
-			
+		}
+		
+		
+		//register the economy
+		try{
+			this.getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, economy, this, ServicePriority.Normal);
+		}
+		catch (Exception e){
+			getLogger().warning("[HomeWorldPlugin] Unable to register Economy.");
 		}
 		
 		
