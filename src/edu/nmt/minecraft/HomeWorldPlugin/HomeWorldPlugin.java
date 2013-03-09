@@ -2,6 +2,9 @@ package edu.nmt.minecraft.HomeWorldPlugin;
 
 import java.util.HashMap;
 
+import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 
 import com.sk89q.worldedit.BlockVector;
@@ -18,9 +22,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
-import edu.nmt.minecraft.HomeWorldPlugin.economy.Currency;
-import edu.nmt.minecraft.HomeWorldPlugin.economy.EconomyListener;
-import edu.nmt.minecraft.HomeWorldPlugin.economy.EconomyManager;
 import edu.nmt.minecraft.HomeWorldPlugin.land.LandManager;
 import edu.nmt.minecraft.HomeWorldPlugin.market.MarketPlace;
 //import edu.nmt.minecraft.HomeWorldPlugin.arena.Arena;
@@ -50,7 +51,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		
 	}
 	
-	public static EconomyManager economy = null;
+	public static Economy economy = null;
 	public static LandManager landManager = null;
 	public static MarketPlace market;
 	public static FileManager fileManager = null;
@@ -79,6 +80,8 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 			cm.reloadConfig();
 		}
 		
+		setupEconomy();
+		
 		//setup fileManager
 		fileManager = new FileManager();
 		
@@ -88,26 +91,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		//setup arena
 		//getServer().getPluginManager().registerEvents(new Arena(), this);
 		
-		//setup economy
-		economy = new EconomyManager();
-		//TODO: turn these into a configuration file
-		economy.addCurrency(new Currency("coal", Material.COAL, 0, 10));
-		economy.addCurrency(new Currency("redstone", Material.REDSTONE, 0, 15));
-		economy.addCurrency(new Currency("coal_ore", Material.COAL_ORE, 0, 22));
-		economy.addCurrency(new Currency("iron_ore", Material.IRON_ORE, 0, 20));
-		economy.addCurrency(new Currency("iron", Material.IRON_INGOT, 0, 20));
-		economy.addCurrency(new Currency("redstone_ore", Material.REDSTONE_ORE, 0, 33));
-		economy.addCurrency(new Currency("lapis", Material.INK_SACK, 4, 35));
-		economy.addCurrency(new Currency("lapis_ore", Material.LAPIS_ORE, 0, 77));
-		economy.addCurrency(new Currency("iblock", Material.IRON_BLOCK, 0, 180));
-		economy.addCurrency(new Currency("gold_ore", Material.GOLD_ORE, 0, 200));
-		economy.addCurrency(new Currency("gold",  Material.GOLD_INGOT, 0, 200));
-		economy.addCurrency(new Currency("lblock", Material.LAPIS_BLOCK, 0, 315));
-		economy.addCurrency(new Currency("diamond", Material.DIAMOND, 0, 400));
-		economy.addCurrency(new Currency("diamond_ore", Material.DIAMOND_ORE, 0, 880));
-		economy.addCurrency(new Currency("gblock", Material.GOLD_BLOCK, 0, 1800));
-		economy.addCurrency(new Currency("dblock", Material.DIAMOND_BLOCK, 0, 3600));
-		getServer().getPluginManager().registerEvents(new EconomyListener(), this);
+		
 		
 		//setup worldguard hook
 		wgplugin = getWorldGuard();
@@ -265,7 +249,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		for (ConfigManager cm: configurations.values()){
 			cm.saveConfig();
 		}
-		economy.save();
 		market.save();
 		loginHandler.save();
 		//whitelist.save();
@@ -275,13 +258,24 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		for (ConfigManager cm: configurations.values()){
 			cm.reloadConfig();
 		}
-		economy.load();
 		market.load();
 		loginHandler.load();
 		//whitelist.load();
 	}
 	
-	
+	/**
+	 * Uses Vault to hook into an economy plugin
+	 * @return
+	 */
+	public static boolean setupEconomy()
+    {
+        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+
+        return (economy != null);
+    }
 	
 
 }

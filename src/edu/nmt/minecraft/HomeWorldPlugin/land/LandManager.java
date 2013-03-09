@@ -87,6 +87,14 @@ public class LandManager {
 			return;
 		}
 		
+		//make sure there is an economy
+		if (HomeWorldPlugin.economy == null){
+			if (!HomeWorldPlugin.setupEconomy()){
+				sender.sendMessage("Error. No economy plugin loaded.");
+				return;
+			}
+		}
+		
 		//get the region
 		RegionManager rm = HomeWorldPlugin.wgplugin.getRegionManager(Bukkit.getWorld("HomeWorld"));
 		ProtectedRegion region = rm.getRegion(sender.getName() + "__" + regionName);
@@ -111,7 +119,7 @@ public class LandManager {
 		}
 		
 		//refund the player
-		HomeWorldPlugin.economy.deposit(sender.getName(), cost);
+		HomeWorldPlugin.economy.depositPlayer(sender.getName(), cost);
 		
 		//notify the player
 		sender.sendMessage("You have sold the plot of land and have been refunded its original cost of " + cost);
@@ -134,6 +142,14 @@ public class LandManager {
 		if (!(Bukkit.getWorld("HomeWorld").getPlayers().contains(sender))){
 			sender.sendMessage("Sorry, you have to be on the HomeWorld to buy land");
 			return;
+		}
+		
+		//make sure there is an economy
+		if (HomeWorldPlugin.economy == null){
+			if (!HomeWorldPlugin.setupEconomy()){
+				sender.sendMessage("Error. No economy plugin loaded.");
+				return;
+			}
 		}
 		
 		//get the players economy balance
@@ -217,7 +233,7 @@ public class LandManager {
 		}
 		
 		//remove funds from player
-		HomeWorldPlugin.economy.withdraw(sender.getName(), cost);
+		HomeWorldPlugin.economy.withdrawPlayer(sender.getName(), cost);
 		
 		//let the player know
 		sender.sendMessage("Congradulations, you now own this region");

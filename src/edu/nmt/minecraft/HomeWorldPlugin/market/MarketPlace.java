@@ -117,6 +117,14 @@ public class MarketPlace implements Listener {
 		if (! atMarket(player, event.getInventory())) {
 			return;
 		}		
+		
+		//make sure there is an economy
+		if (HomeWorldPlugin.economy == null){
+			if (!HomeWorldPlugin.setupEconomy()){
+				player.sendMessage("Error. No economy plugin loaded.");
+				return;
+			}
+		}
 
 		//don't allow any right clicking
 		if (event.isRightClick()){
@@ -460,7 +468,7 @@ public class MarketPlace implements Listener {
 		marketItem.setSold(true);
 		player.getInventory().addItem(marketItem);
 
-		HomeWorldPlugin.economy.deposit(marketItem.getSeller(), marketItem.getPrice());
+		HomeWorldPlugin.economy.depositPlayer(marketItem.getSeller(), marketItem.getPrice());
 		Player seller = Bukkit.getPlayer(marketItem.getSeller());
 				
 		if (seller != null){
@@ -469,7 +477,7 @@ public class MarketPlace implements Listener {
 		}
 				
 
-		HomeWorldPlugin.economy.withdraw(player.getName(),
+		HomeWorldPlugin.economy.withdrawPlayer(player.getName(),
 				marketItem.getPrice());
 		player.sendMessage("You have bought: " + marketItem.toString()
 				+ " for $" + marketItem.getPrice());
