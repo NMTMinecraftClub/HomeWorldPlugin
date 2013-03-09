@@ -13,18 +13,18 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
  * 
  *
  */
-public class MobSpawnListener implements Listener{
+public class WildernessListener implements Listener{
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void witherSpawn(CreatureSpawnEvent event){
 		//CreatureSpawnEvent.SpawnReason.BUILD_WITHER.equals(true);
-		
-		System.out.println("");
 		//checks if a wither is spawned in HomeWorld
-		if(event.getEntity().getEntityId() == 64 && ! event.getLocation().getWorld().getName().matches("Wilderness")){
-			System.out.println("tryed to spawn wither in world that isn't the wilderness");
-			event.setCancelled(true);
-			
+		if(event.getEntity().equals(org.bukkit.entity.EntityType.WITHER)){
+			System.out.println("WITHER!!");
+			if (! event.getLocation().getWorld().getName().matches("Wilderness")){
+				System.out.println("tried to spawn wither in world that isn't the wilderness");
+				event.setCancelled(true);
+			}
 		}
 	}	
 }

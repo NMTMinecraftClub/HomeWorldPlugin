@@ -59,7 +59,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	//public static Whitelist whitelist;
 	public static FileSavingThread savingThread = null;
 	public static LoginHandler loginHandler = null;
-	public static MobSpawnListener mobSpawnListener = null;
+	public static WildernessListener mobSpawnListener = null;
 	
 	
 	/**
@@ -122,10 +122,11 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		getServer().getPluginManager().registerEvents(loginHandler, this);
 		
 		try{
-			mobSpawnListener = new MobSpawnListener();
+			mobSpawnListener = new WildernessListener();
 			getServer().getPluginManager().registerEvents(mobSpawnListener, this);
+			getLogger().info("Wilderness listener has been enabled");
 		}catch(Exception e){
-			System.out.println(e.getMessage().equals("Something with a wither"));
+			getLogger().warning("Unable to enable wilderness listener");
 		}
 		
 		
