@@ -60,8 +60,6 @@ public class LoginHandler implements Listener{
 		ConfigManager cm = HomeWorldPlugin.configurations.get("login.yml");
 		cm.getFile().delete();
 		
-		System.out.println(knownPlayers.toArray());
-		
 		cm.getConfig().set("knownplayers", knownPlayers.toArray());
 		cm.saveConfig();
 		

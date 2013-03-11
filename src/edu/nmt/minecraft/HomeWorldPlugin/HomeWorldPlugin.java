@@ -23,7 +23,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
 import edu.nmt.minecraft.HomeWorldPlugin.land.LandManager;
-import edu.nmt.minecraft.HomeWorldPlugin.market.MarketPlace;
 //import edu.nmt.minecraft.HomeWorldPlugin.arena.Arena;
 
 /**
@@ -53,7 +52,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	
 	public static Economy economy = null;
 	public static LandManager landManager = null;
-	public static MarketPlace market;
 	public static FileManager fileManager = null;
 	public static HashMap<String, ConfigManager> configurations = null;
 	//public static Whitelist whitelist;
@@ -85,9 +83,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		//setup fileManager
 		fileManager = new FileManager();
 		
-		//setup market
-		market = new MarketPlace(this, "market", new ProtectedCuboidRegion("__market__spawn", new BlockVector(200, 70, 144), new BlockVector(220, 90, 168)));
-		
+		//setup market		
 		//setup arena
 		//getServer().getPluginManager().registerEvents(new Arena(), this);
 		
@@ -250,7 +246,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		for (ConfigManager cm: configurations.values()){
 			cm.saveConfig();
 		}
-		market.save();
 		loginHandler.save();
 		//whitelist.save();
 	}
@@ -259,7 +254,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		for (ConfigManager cm: configurations.values()){
 			cm.reloadConfig();
 		}
-		market.load();
 		loginHandler.load();
 		//whitelist.load();
 	}
