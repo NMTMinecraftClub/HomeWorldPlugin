@@ -1,12 +1,7 @@
 package edu.nmt.minecraft.HomeWorldPlugin;
-//haha funny
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.command.BlockCommandSender;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class CommandHandler {
 	
@@ -14,6 +9,67 @@ public class CommandHandler {
 	 * command handler. handles all commands
 	 */
 	public static boolean commands(CommandSender sender, Command cmd, String label, String[] args){
+		
+		if(cmd.getName().equalsIgnoreCase("addMember")){
+			
+			if (args.length != 2){
+				sender.sendMessage("Wrong number of arguments.");
+				return false;
+			}
+			else{
+				HomeWorldPlugin.landManager.addMember(sender, args[0], args[1]);
+			}
+			return true;
+		}
+		if(cmd.getName().equalsIgnoreCase("removeMember")){
+			
+			if (args.length != 2){
+				sender.sendMessage("Wrong number of arguments.");
+				return false;
+			}
+			else{
+				HomeWorldPlugin.landManager.removeMember(sender, args[0], args[1]);
+			}
+			return true;
+		}
+		
+		if(cmd.getName().equalsIgnoreCase("addOwner")){
+			
+			if (args.length != 2){
+				sender.sendMessage("Wrong number of arguments.");
+				return false;
+			}
+			else{
+				HomeWorldPlugin.landManager.addOwner(sender, args[0], args[1]);
+			}
+			return true;
+		}
+		if(cmd.getName().equalsIgnoreCase("removeOwner")){
+			
+			if (args.length != 2){
+				sender.sendMessage("Wrong number of arguments.");
+				return false;
+			}
+			else{
+				HomeWorldPlugin.landManager.removeOwner(sender, args[0], args[1]);
+			}
+			return true;
+		}
+		
+		/**
+		 * player wants to change the flags on their land
+		 */
+		if(cmd.getName().equalsIgnoreCase("flag")){
+			
+			if (args.length != 3){
+				sender.sendMessage("Wrong number of arguments.");
+				return false;
+			}
+			else{
+				HomeWorldPlugin.flagManager.setFlag(sender, args);
+			}
+			return true;
+		}
 		
 		/**
 		 * player wants to buy a plot of land
@@ -53,6 +109,18 @@ public class CommandHandler {
 			}
 			else{
 				HomeWorldPlugin.landManager.listRegions(sender);
+			}
+			return true;
+		}
+		
+		//gets the price of your selection
+		if(cmd.getName().equalsIgnoreCase("price")){
+			if (args.length != 0){
+				sender.sendMessage("Wrong number of arguments.");
+				return false;
+			}
+			else{
+				HomeWorldPlugin.landManager.getPrice(sender);
 			}
 			return true;
 		}

@@ -21,11 +21,144 @@ import edu.nmt.minecraft.HomeWorldPlugin.HomeWorldPlugin;
 public class LandManager {
 	
 	
-	public LandManager(){
+	public LandManager(){}
+	
+	/**
+	 * Adds a member to a region
+	 * @param sender
+	 * @param memberName
+	 * @param regionName
+	 */
+	public void addMember(CommandSender sender, String memberName, String regionName){
 		
+		if(!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		//assuming if they have an account, they are a valid identity to add as a member
+		if(!HomeWorldPlugin.economy.hasAccount(memberName)){
+			sender.sendMessage(memberName + " is not an existing player");
+			return;
+		}
+		
+		RegionManager rm = HomeWorldPlugin.wgplugin.getRegionManager(Bukkit.getWorld("HomeWorld"));
+		ProtectedRegion region = rm.getRegion(sender.getName() + "__" + regionName);
+		if (region == null){
+			sender.sendMessage("No such region was found.");
+			return;
+		}
+		
+		if(!region.isOwner(sender.getName())){
+			sender.sendMessage("You are not the owner of the specified region");
+			return;
+		}
+		
+		DefaultDomain d = region.getMembers();
+		d.addPlayer(memberName);
+		region.setMembers(d);
 	}
 	
+	/**
+	 * Removes a member from a region
+	 * @param sender
+	 * @param memberName
+	 * @param regionName
+	 */
+	public void removeMember(CommandSender sender, String memberName, String regionName){
+		
+		if(!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		RegionManager rm = HomeWorldPlugin.wgplugin.getRegionManager(Bukkit.getWorld("HomeWorld"));
+		ProtectedRegion region = rm.getRegion(sender.getName() + "__" + regionName);
+		if (region == null){
+			sender.sendMessage("No such region was found.");
+			return;
+		}
+		
+		if(!region.isOwner(sender.getName())){
+			sender.sendMessage("You are not the owner of the specified region");
+			return;
+		}
+		
+		DefaultDomain d = region.getMembers();
+		
+		if(!d.contains(memberName)){
+			sender.sendMessage("Player " + memberName + " is not a member of this region");
+			return;
+		}
+		d.removePlayer(memberName);
+		region.setMembers(d);
+	}
 	
+	/**
+	 * Adds an owner to a region
+	 * @param sender
+	 * @param memberName
+	 * @param regionName
+	 */
+	public void addOwner(CommandSender sender, String ownerName, String regionName){
+		
+		if(!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		//assuming if they have an account, they are a valid identity to add as a member
+		if(!HomeWorldPlugin.economy.hasAccount(ownerName)){
+			sender.sendMessage(ownerName + " is not an existing player");
+			return;
+		}
+		
+		RegionManager rm = HomeWorldPlugin.wgplugin.getRegionManager(Bukkit.getWorld("HomeWorld"));
+		ProtectedRegion region = rm.getRegion(sender.getName() + "__" + regionName);
+		if (region == null){
+			sender.sendMessage("No such region was found.");
+			return;
+		}
+		
+		if(!region.isOwner(sender.getName())){
+			sender.sendMessage("You are not the owner of the specified region");
+			return;
+		}
+		
+		DefaultDomain d = region.getOwners();
+		d.addPlayer(ownerName);
+		region.setOwners(d);
+	}
+	
+	public void removeOwner(CommandSender sender, String ownerName, String regionName){
+		
+		if(!(sender instanceof Player)){
+			sender.sendMessage("Sorry, only players can execute this command");
+			return;
+		}
+		
+		RegionManager rm = HomeWorldPlugin.wgplugin.getRegionManager(Bukkit.getWorld("HomeWorld"));
+		ProtectedRegion region = rm.getRegion(sender.getName() + "__" + regionName);
+		if (region == null){
+			sender.sendMessage("No such region was found.");
+			return;
+		}
+		
+		if(!region.isOwner(sender.getName())){
+			sender.sendMessage("You are not the owner of the specified region");
+			return;
+		}
+		
+		DefaultDomain d = region.getOwners();
+		
+		if(!d.contains(ownerName)){
+			sender.sendMessage("Player " + ownerName + " is not an owner of this region");
+			return;
+		}
+		d.removePlayer(ownerName);
+		region.setOwners(d);
+	}
+
 	/**
 	 * Lists all regions a sender owns
 	 * @param sender the player executing the command
@@ -246,7 +379,7 @@ public class LandManager {
 	 * @param width width of the selection
 	 * @return the cost of the given dimentions
 	 */
-	private double getCost(double height, double length, double width){
+	public static double getCost(double height, double length, double width){
 		return (5 + height)*(length * width);
 	}
 }

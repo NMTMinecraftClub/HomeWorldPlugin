@@ -16,12 +16,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
+import edu.nmt.minecraft.HomeWorldPlugin.land.FlagManager;
 import edu.nmt.minecraft.HomeWorldPlugin.land.LandManager;
 //import edu.nmt.minecraft.HomeWorldPlugin.arena.Arena;
 
@@ -58,7 +57,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	public static FileSavingThread savingThread = null;
 	public static LoginHandler loginHandler = null;
 	public static WildernessListener mobSpawnListener = null;
-	
+	public static FlagManager flagManager = null;
 	
 	/**
 	 * This is ran once the plugin is enabled. It is ran after the constructor.
@@ -125,6 +124,8 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 			getLogger().warning("Unable to enable wilderness listener");
 		}
 		
+		//set up active flags management
+		flagManager = new FlagManager();
 		
 		//register the economy
 		try{
@@ -238,7 +239,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		inv.addItem(book);
 		
 		sender.sendMessage("A book has been placed in your inventory.");
-	
 	}
 
 	
@@ -274,4 +274,3 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	
 
 }
-
