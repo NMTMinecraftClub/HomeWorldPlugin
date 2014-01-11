@@ -20,8 +20,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
-import edu.nmt.minecraft.HomeWorldPlugin.land.FlagManager;
-import edu.nmt.minecraft.HomeWorldPlugin.land.LandManager;
 //import edu.nmt.minecraft.HomeWorldPlugin.arena.Arena;
 
 /**
@@ -50,14 +48,12 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	}
 	
 	public static Economy economy = null;
-	public static LandManager landManager = null;
 	public static FileManager fileManager = null;
 	public static HashMap<String, ConfigManager> configurations = null;
 	//public static Whitelist whitelist;
 	public static FileSavingThread savingThread = null;
 	public static LoginHandler loginHandler = null;
 	public static WildernessListener mobSpawnListener = null;
-	public static FlagManager flagManager = null;
 	
 	/**
 	 * This is ran once the plugin is enabled. It is ran after the constructor.
@@ -100,9 +96,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 			getLogger().severe("HOMEWORLD FAILED TO LOAD WORLDEDIT");
 		}
 		
-		//set up the landmanager
-		landManager = new LandManager();
-		
 		//setup whitelist
 		//whitelist = new Whitelist();
 		//getServer().getPluginManager().registerEvents(whitelist, this);
@@ -123,9 +116,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		}catch(Exception e){
 			getLogger().warning("Unable to enable wilderness listener");
 		}
-		
-		//set up active flags management
-		flagManager = new FlagManager();
 		
 		//register the economy
 		try{
