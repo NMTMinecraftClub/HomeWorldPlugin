@@ -214,13 +214,15 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		meta.setAuthor("NMT Minecraft Club");
 		
 		//set pages
-		meta.addPage("Welcome to the NMT Minecraft Club Server! The NMT Miners (pun intended) have come together to create a dedicated minecraft server for the campus! This book will explain exactly how everything works on the server.");
-		meta.addPage("The Spawn: The spawn exists in the HomeWorld. Here, PvP is turned off. The spawn includes portals to other world. One portal leads to a creative world. Another leads to a PvP world known as the wilderness.");
-		meta.addPage("The Economy: coal, iron (iggots), gold (iggots), diamonds, redstone, and lapis can be traded for money, but only on the HomeWorld. Use /money to see your account. /deposit [ore] [ammount] and /withdraw [ore] [ammount] can be used for transactions");
-		meta.addPage("Other economy commands: /wealth: Displays how much money you are carrying in physical currencies. /value: Displays how much an amount of a certain currency is worth. /pay: Pay a player a certain amount. /top: See the players with the highest accounts");
+		meta.addPage("Welcome to the NMT Minecraft Club Server!\n\nThis book will explain exactly how everything works on the server.");
+		meta.addPage("The Spawn: The spawn is in the HomeWorld but includes portals to other worlds. To see what portals are available, visit the giant NMT building near the center of the spawn.");
+		meta.addPage("Economy Currencies: coal, coal_block, iron, iron_block, redstone, redstone_block, quartz, gold, gold_block, diamond, diamond_block.\n\nThese currencies can be put into your game account at a bank.");
+		meta.addPage("Economy Commands:\n\ndeposit [currency] #\n- deposits # of currency into the bank\nwithdraw [currency] #\n- withdraws # of currency from the bank");
+		meta.addPage("\nvalue [currency]\n- Gives you the $ value of currency\n\nvalue bank\n- gives you the # of currencies in the bank\n\nvalue current\n- gives you the dollar value of currencies in your inventory");
+		meta.addPage("\nmoney\n- gives you your account balance\n\npay [player] #\n- pays player # of money\n\ntop #\n- displays the top # of accounts on the server");
+		meta.addPage("Land: Purchase plots of land to protect your creations from other players. use //wand to select a plot of land. buy the land with /buyland [name]. Sell it for the orginal price with /sellland [name]. You can list the land you own with /listland.");
 		meta.addPage("The MarketPlace. Markets are places where players can buy and sell items from one another. Right now, the only market is located in the spawn.");
-		meta.addPage("Land: You can purchase plots of land to protect your creations from other players. use //wand to select a plot of lan. buy the land with /buyland [name]. Sell it for the orginal price with /sellland [name]. You can list the land you own with /listland.");
-		meta.addPage("Arena: The arena is currently under construction. Sorry about that");
+		meta.addPage("Feel free to ask anyone on the server to help. Have fun and watch out for creepers.");
 		
 		//set the meta
 		book.setItemMeta(meta);
