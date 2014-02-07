@@ -46,18 +46,18 @@ public class CommandHandler {
 //			return false;
 //		}
 		
-//		/**
-//		 * help command
-//		 */
-//		if(cmd.getName().equalsIgnoreCase("help")){
-//			if (args.length == 0){
-//				HomeWorldPlugin.help(sender);
-//				return true;
-//			}
-//			
-//			sender.sendMessage("Wrong number of arguments.");
-//			return false;
-//		}	
+		/**
+		 * help command
+		 */
+		if(cmd.getName().equalsIgnoreCase("help")){
+			if (args.length == 0){
+				HomeWorldPlugin.help(sender);
+				return true;
+			}
+			
+			sender.sendMessage("Wrong number of arguments.");
+			return false;
+		}	
 		
 		
 		return false;
