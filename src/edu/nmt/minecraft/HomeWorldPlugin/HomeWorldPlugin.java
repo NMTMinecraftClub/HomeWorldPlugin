@@ -53,7 +53,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	//public static Whitelist whitelist;
 	public static FileSavingThread savingThread = null;
 	public static LoginHandler loginHandler = null;
-	public static WildernessListener mobSpawnListener = null;
+	public static HomeWorldPluginListener mobSpawnListener = null;
 	
 	/**
 	 * This is ran once the plugin is enabled. It is ran after the constructor.
@@ -110,7 +110,7 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		getServer().getPluginManager().registerEvents(loginHandler, this);
 		
 		try{
-			mobSpawnListener = new WildernessListener();
+			mobSpawnListener = new HomeWorldPluginListener();
 			getServer().getPluginManager().registerEvents(mobSpawnListener, this);
 			getLogger().info("Wilderness listener has been enabled");
 		}catch(Exception e){
