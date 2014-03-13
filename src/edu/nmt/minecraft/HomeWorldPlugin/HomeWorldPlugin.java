@@ -17,8 +17,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
+import edu.nmt.minecraft.HomeWorldPlugin.util.FileSavingThread;
 
 //import edu.nmt.minecraft.HomeWorldPlugin.arena.Arena;
 
@@ -48,7 +49,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	}
 	
 	public static Economy economy = null;
-	public static FileManager fileManager = null;
 	public static HashMap<String, ConfigManager> configurations = null;
 	//public static Whitelist whitelist;
 	public static FileSavingThread savingThread = null;
@@ -60,6 +60,10 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	 * loads the houses from a local file.
 	 */
 	public void onEnable(){		
+		
+		if (!this.getDataFolder().exists()){
+			this.getDataFolder().mkdir();
+		}
 		
 		//set up configurations
 		configurations = new HashMap<String, ConfigManager>();
@@ -75,14 +79,9 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		
 		setupEconomy();
 		
-		//setup fileManager
-		fileManager = new FileManager();
-		
 		//setup market		
 		//setup arena
 		//getServer().getPluginManager().registerEvents(new Arena(), this);
-		
-		
 		
 		//setup worldguard hook
 		wgplugin = getWorldGuard();
@@ -102,8 +101,10 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		//whitelist.load();
 		
 		//set up the thread that saves data
-		savingThread = new FileSavingThread();
-		savingThread.start();
+		if (savingThread == null){
+			savingThread = new FileSavingThread();
+			savingThread.start();
+		}
 		
 		//set up login handler
 		loginHandler = new LoginHandler();
@@ -133,18 +134,11 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	 * ran when the plugin is being disabled. saves the houses to file.
 	 */
 	public void onDisable(){
+		if (savingThread != null){
+			savingThread.die = true;
+		}
 		saveAll();
-		
 		getLogger().info("[HomeWorldPlugin] HomeWorldPlugin has been disbled.");
-	}
-	
-	/**
-	 * Reload method. Makes sure all data is saved to file.
-	 */
-	public void onReload(){
-		saveAll();
-		loadAll();
-		getLogger().info("[HomeWorldPlugin] HomeWorldPlugin has been reloaded.");
 	}
 	
 	/**
@@ -207,7 +201,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 
 		//Get item meta
 		BookMeta meta = (BookMeta) book.getItemMeta();
-		
 		
 		//set title and author
 		meta.setTitle("Welcome!");

@@ -31,7 +31,6 @@ public class LoginHandler implements Listener{
 		else{
 			
 		}
-		System.out.println("soefhseoihfse");
 	}
 
 	public void load(){
