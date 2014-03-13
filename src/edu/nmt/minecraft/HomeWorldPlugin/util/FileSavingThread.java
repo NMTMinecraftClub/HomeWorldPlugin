@@ -24,15 +24,6 @@ public class FileSavingThread extends Thread implements Listener{
 			
 			while (wait < sleepTime){
 				
-				//check for wilderness
-				World wilderness = Bukkit.getWorld("Wilderness");
-				if (wilderness != null){
-					wilderness.setMonsterSpawnLimit(100);
-					wilderness.setAnimalSpawnLimit(0);
-					wilderness.setWaterAnimalSpawnLimit(0);
-					wilderness.setTicksPerMonsterSpawns(20);
-				}
-				
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
