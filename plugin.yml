@@ -1,17 +1,8 @@
 name: HomeWorldPlugin
 main: edu.nmt.minecraft.HomeWorldPlugin.HomeWorldPlugin
 version: 1.0
-softdepend: [WorldEdit, WorldGuard]
+softdepend: [WorldEdit, WorldGuard, Vault]
 commands:
-    buyland:
-        description: buy your current selection.
-        usage: /buyland (plot name)
-    sellland:
-        description: sell a plot of land.
-        usage: /sellland (plot name)
-    listland:
-        description: list all of the plots you own.
-        usage: /listland
     help:
         description: get help
         usage: /help

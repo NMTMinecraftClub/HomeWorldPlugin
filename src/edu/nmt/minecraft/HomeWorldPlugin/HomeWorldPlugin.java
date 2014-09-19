@@ -1,10 +1,5 @@
 package edu.nmt.minecraft.HomeWorldPlugin;
 
-import java.util.HashMap;
-
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,15 +8,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-
-import edu.nmt.minecraft.HomeWorldPlugin.util.FileSavingThread;
-
-//import edu.nmt.minecraft.HomeWorldPlugin.arena.Arena;
 
 /**
  * Main class for the plugin. Everything starts from here
@@ -30,29 +19,6 @@ import edu.nmt.minecraft.HomeWorldPlugin.util.FileSavingThread;
  */
 public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	
-	/**
-	 * WorldGuard Plugin
-	 */
-	public static WorldGuardPlugin wgplugin = null;
-	
-	/**
-	 * WorldEdit Plugin
-	 */
-	public static WorldEditPlugin weplugin = null;
-
-	
-	/**
-	 * Default Constructor. Only sets up internal objects. Does not mess with plugins or hooks.
-	 */
-	public HomeWorldPlugin(){
-		
-	}
-	
-	public static Economy economy = null;
-	public static HashMap<String, ConfigManager> configurations = null;
-	//public static Whitelist whitelist;
-	public static FileSavingThread savingThread = null;
-	public static LoginHandler loginHandler = null;
 	public static HomeWorldPluginListener mobSpawnListener = null;
 	
 	/**
@@ -60,55 +26,6 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 	 * loads the houses from a local file.
 	 */
 	public void onEnable(){		
-		
-		if (!this.getDataFolder().exists()){
-			this.getDataFolder().mkdir();
-		}
-		
-		//set up configurations
-		configurations = new HashMap<String, ConfigManager>();
-		//configurations.put("market.yml", new ConfigManager(this, "market.yml"));
-		configurations.put("login.yml", new ConfigManager(this, "login.yml"));
-		//configurations.put("whitelist.yml", new ConfigManager(this, "whitelist.yml"));
-		//TODO: switch economy to use configurations
-		
-		//get configurations
-		for (ConfigManager cm: configurations.values()){
-			cm.reloadConfig();
-		}
-		
-		setupEconomy();
-		
-		//setup market		
-		//setup arena
-		//getServer().getPluginManager().registerEvents(new Arena(), this);
-		
-		//setup worldguard hook
-		wgplugin = getWorldGuard();
-		if (wgplugin == null){
-			getLogger().severe("HOMEWORLD FAILED TO LOAD WORLDGUARD");
-		}
-		
-		//setup worldedit hook
-		weplugin = getWorldEdit();
-		if (weplugin == null){
-			getLogger().severe("HOMEWORLD FAILED TO LOAD WORLDEDIT");
-		}
-		
-		//setup whitelist
-		//whitelist = new Whitelist();
-		//getServer().getPluginManager().registerEvents(whitelist, this);
-		//whitelist.load();
-		
-		//set up the thread that saves data
-		if (savingThread == null){
-			savingThread = new FileSavingThread();
-			savingThread.start();
-		}
-		
-		//set up login handler
-		loginHandler = new LoginHandler();
-		getServer().getPluginManager().registerEvents(loginHandler, this);
 		
 		try{
 			mobSpawnListener = new HomeWorldPluginListener();
@@ -118,27 +35,10 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 			getLogger().warning("Unable to enable wilderness listener");
 		}
 		
-		//register the economy
-		try{
-			this.getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, economy, this, ServicePriority.Normal);
-		}
-		catch (Exception e){
-			getLogger().warning("[HomeWorldPlugin] Unable to register Economy.");
-		}
-		
-		
-		getLogger().info("[HomeWorldPlugin] HomeWorldPlugin has been enabled.");
 	}
  
-	/**
-	 * ran when the plugin is being disabled. saves the houses to file.
-	 */
 	public void onDisable(){
-		if (savingThread != null){
-			savingThread.die = true;
-		}
-		saveAll();
-		getLogger().info("[HomeWorldPlugin] HomeWorldPlugin has been disbled.");
+
 	}
 	
 	/**
@@ -225,37 +125,5 @@ public class HomeWorldPlugin extends org.bukkit.plugin.java.JavaPlugin{
 		
 		sender.sendMessage("A book has been placed in your inventory.");
 	}
-
-	
-	public static void saveAll() {
-		for (ConfigManager cm: configurations.values()){
-			cm.saveConfig();
-		}
-		loginHandler.save();
-		//whitelist.save();
-	}
-	
-	public static void loadAll(){
-		for (ConfigManager cm: configurations.values()){
-			cm.reloadConfig();
-		}
-		loginHandler.load();
-		//whitelist.load();
-	}
-	
-	/**
-	 * Uses Vault to hook into an economy plugin
-	 * @return
-	 */
-	public static boolean setupEconomy()
-    {
-        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
-
-        return (economy != null);
-    }
-	
 
 }
