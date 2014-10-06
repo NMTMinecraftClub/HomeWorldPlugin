@@ -1,0 +1,41 @@
+name: LandPurchasing
+main: com.m0pt0pmatt.LandPurchasing.LandPurchasing
+version: 0.1
+softdepend: [WorldEdit, WorldGuard, Vault, MenuService]
+commands:
+    priceland:
+        description: Get the price of your current selection
+        usage: /priceland
+    buyland:
+        description: Buy your current selection
+        usage: /buyland [plot_name]
+    sellland:
+        description: Sell a plot of land
+        usage: /sellland [plot_name]
+    listland:
+        description: List all of the plots you own
+        usage: /listland
+    flagland:
+        description: Change a flag on a plot of land
+        usage: /flagland [plot] [flag] [value]
+    addmember:
+        description: Add a member to a plot of land
+        usage: /addmember [plot_name] [player_name]
+    removemember:
+        description: Remove a member from a plot of land
+        usage: /removemember [plot_name] [player_name]
+    addowner:
+        description: Add an owner to a plot of land
+        usage: /addowner [plot_name] [player_name]
+    removeowner:
+        description: Remove an owner from a plot of land
+        usage: /removeowner [plot_name] [player_name]
+    landmenu:
+        description: Open the land menu
+        usage: /landmenu
+    land:
+        description: A wrapper command for all land-related commands
+        usage: /land [command] [arguments]
+    landinfo:
+        description: gives a player information about the land they are currently in
+        usage: /landinfo
